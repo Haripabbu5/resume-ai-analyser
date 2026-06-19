@@ -61,6 +61,32 @@
 
 <!-- ===== MAIN APP ===== -->
 <div id="mainApp" style="display:none">
+  <!-- ===== API KEY SETUP MODAL ===== -->
+  <div id="apiKeyModal" class="modal-overlay" style="display:none">
+    <div class="modal-card">
+      <div class="modal-icon"><i class="fas fa-key"></i></div>
+      <h2>Set Up Your AI Key</h2>
+      <p class="modal-desc">ResumeAI uses Google's free Gemini AI. You need a free API key to use it. It takes 30 seconds to get one.</p>
+      <div class="modal-steps">
+        <div class="modal-step"><span class="ms-num">1</span> Go to <a href="https://aistudio.google.com/app/apikey" target="_blank" rel="noopener">aistudio.google.com/app/apikey</a></div>
+        <div class="modal-step"><span class="ms-num">2</span> Click "Create API Key" (free, no credit card)</div>
+        <div class="modal-step"><span class="ms-num">3</span> Copy and paste it below</div>
+      </div>
+      <div class="modal-input-wrap">
+        <label>Your Gemini API Key</label>
+        <div class="pass-wrap" style="margin-top:8px">
+          <input type="password" id="apiKeyInput" placeholder="AIzaSy..." style="width:100%;padding:13px 44px 13px 16px;border:2px solid #e2e8f0;border-radius:12px;font-size:15px;font-family:inherit"/>
+          <button type="button" class="pass-toggle" onclick="togglePass('apiKeyInput',this)"><i class="fas fa-eye"></i></button>
+        </div>
+        <p class="modal-note"><i class="fas fa-shield-alt"></i> Stored only in your browser. Never sent to any server except Google's Gemini API.</p>
+      </div>
+      <div id="apiKeyError" class="auth-error" style="margin-top:8px"></div>
+      <button class="btn-auth" onclick="saveApiKey()"><i class="fas fa-check"></i> Save &amp; Continue</button>
+      <p style="text-align:center;margin-top:12px;font-size:12px;color:#94a3b8"><a href="https://aistudio.google.com/app/apikey" target="_blank" rel="noopener" style="color:#4f46e5;font-weight:600"><i class="fas fa-external-link-alt"></i> Get free key at aistudio.google.com</a></p>
+    </div>
+  </div>
+
+
 
   <!-- Navbar -->
   <nav class="navbar">
@@ -68,6 +94,7 @@
     <div class="nav-links">
       <button class="nav-tab-btn active" id="navAnalyse" onclick="switchView('analyse')"><i class="fas fa-bolt"></i> Analyse</button>
       <button class="nav-tab-btn" id="navHistory" onclick="switchView('history')"><i class="fas fa-history"></i> History <span id="historyBadge" class="badge-count" style="display:none"></span></button>
+      <button class="nav-tab-btn" id="navSettings" onclick="showApiKeyModal(true)" title="API Key Settings"><i class="fas fa-cog"></i></button>
       <div class="nav-divider"></div>
       <span id="navUserName" class="nav-user"></span>
       <button class="btn-logout" onclick="doLogout()"><i class="fas fa-sign-out-alt"></i> Logout</button>
