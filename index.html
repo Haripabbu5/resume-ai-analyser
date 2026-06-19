@@ -1,86 +1,236 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>ResumeAI - Smart Resume Analyser</title>
-  <link rel="stylesheet" href="style.css" />
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet"/>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"/>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>ResumeAI - Smart Resume Analyser</title>
+<link rel="stylesheet" href="style.css"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet"/>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"/>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
 </head>
 <body>
+
+<!-- AUTH SCREEN -->
+<div id="authScreen" class="auth-screen">
+  <div class="auth-card">
+    <div class="auth-brand"><i class="fas fa-robot"></i> ResumeAI</div>
+    <div class="auth-tabs">
+      <button class="auth-tab active" onclick="showTab('login')">Login</button>
+      <button class="auth-tab" onclick="showTab('signup')">Sign Up</button>
+    </div>
+    <div id="loginForm">
+      <div class="input-group">
+        <label>Email</label>
+        <input type="email" id="loginEmail" placeholder="you@email.com"/>
+      </div>
+      <div class="input-group">
+        <label>Password</label>
+        <input type="password" id="loginPassword" placeholder="Your password"/>
+      </div>
+      <div id="loginError" class="auth-error"></div>
+      <button class="btn-auth" onclick="doLogin()"><i class="fas fa-sign-in-alt"></i> Login</button>
+      <p class="auth-switch">No account? <a href="#" onclick="showTab('signup')">Sign Up</a></p>
+    </div>
+    <div id="signupForm" style="display:none">
+      <div class="input-group">
+        <label>Full Name</label>
+        <input type="text" id="signupName" placeholder="John Doe"/>
+      </div>
+      <div class="input-group">
+        <label>Email</label>
+        <input type="email" id="signupEmail" placeholder="you@email.com"/>
+      </div>
+      <div class="input-group">
+        <label>Password</label>
+        <input type="password" id="signupPassword" placeholder="Min 6 characters"/>
+      </div>
+      <div id="signupError" class="auth-error"></div>
+      <button class="btn-auth" onclick="doSignup()"><i class="fas fa-user-plus"></i> Create Account</button>
+      <p class="auth-switch">Have an account? <a href="#" onclick="showTab('login')">Login</a></p>
+    </div>
+  </div>
+</div>
+
+<!-- MAIN APP -->
+<div id="mainApp" style="display:none">
   <nav class="navbar">
     <div class="nav-brand"><i class="fas fa-robot"></i> ResumeAI</div>
     <div class="nav-links">
-      <a href="#how">How it works</a>
-      <a href="#upload" class="btn-nav">Analyse Now</a>
+      <span id="navUserName" class="nav-user"></span>
+      <a href="#" onclick="doLogout()" class="btn-logout"><i class="fas fa-sign-out-alt"></i> Logout</a>
     </div>
   </nav>
+
   <section class="hero">
     <div class="hero-content">
-      <span class="badge">AI Powered</span>
-      <h1>Analyse Your Resume - Get Hired Faster</h1>
-      <p>Upload your resume and get instant AI-powered feedback on skills, ATS score, strengths, and improvement tips.</p>
-      <a href="#upload" class="btn-primary">Analyse My Resume</a>
+      <span class="badge"><i class="fas fa-bolt"></i> AI Powered</span>
+      <h1>Analyse &amp; Tailor Your Resume</h1>
+      <p>Upload your resume, match it against a Job Description, or let AI rewrite it for a completely new role.</p>
+      <a href="#upload" class="btn-primary"><i class="fas fa-rocket"></i> Get Started Free</a>
     </div>
   </section>
+
   <section class="how-it-works" id="how">
     <h2>How It Works</h2>
-    <p class="sub">Three simple steps to a better resume</p>
+    <p class="sub">Three powerful modes — one smart tool</p>
     <div class="steps">
-      <div class="step"><div class="step-icon">1</div><h3>Paste Resume</h3><p>Paste your resume text directly into the analyser.</p></div>
-      <div class="step"><div class="step-icon">2</div><h3>AI Analysis</h3><p>Our AI analyses your resume for ATS compatibility, skills, and gaps.</p></div>
-      <div class="step"><div class="step-icon">3</div><h3>Get Report</h3><p>Receive a detailed report with actionable suggestions instantly.</p></div>
+      <div class="step">
+        <div class="step-icon"><i class="fas fa-upload"></i></div>
+        <h3>Upload Resume</h3>
+        <p>Upload a PDF or paste your resume text. Extracted automatically.</p>
+      </div>
+      <div class="step">
+        <div class="step-icon"><i class="fas fa-search"></i></div>
+        <h3>Choose Mode</h3>
+        <p>Analyse it, match vs a Job Description, or tailor for a new role.</p>
+      </div>
+      <div class="step">
+        <div class="step-icon"><i class="fas fa-chart-bar"></i></div>
+        <h3>Get AI Report</h3>
+        <p>ATS score, skill gaps, strengths, suggestions &amp; rewritten resume.</p>
+      </div>
     </div>
   </section>
+
   <section class="upload-section" id="upload">
     <div class="upload-card">
       <h2>Analyse Your Resume</h2>
-      <p>Paste your resume text below and get instant AI feedback</p>
-      <div class="input-group">
-        <label>Job Role (Optional)</label>
-        <input type="text" id="jobRole" placeholder="e.g. Software Engineer, Data Analyst"/>
+      <p class="card-sub">Upload PDF or paste text — choose your analysis mode below</p>
+
+      <div class="mode-tabs">
+        <button class="mode-tab active" onclick="setMode('analyse')" id="tabAnalyse">
+          <i class="fas fa-search"></i> Analyse
+        </button>
+        <button class="mode-tab" onclick="setMode('jd')" id="tabJD">
+          <i class="fas fa-file-alt"></i> Match vs JD
+        </button>
+        <button class="mode-tab" onclick="setMode('tailor')" id="tabTailor">
+          <i class="fas fa-magic"></i> Tailor for Role
+        </button>
       </div>
+
       <div class="input-group">
-        <label>Paste Your Resume Text *</label>
-        <textarea id="resumeText" rows="12" placeholder="Paste your full resume text here..."></textarea>
-      </div>
-      <div class="api-group">
-        <label>Your Gemini API Key *</label>
-        <div class="api-input-wrap">
-          <input type="password" id="apiKey" placeholder="Paste your Google Gemini API key here"/>
-          <button onclick="toggleKey()" id="toggleBtn">Show</button>
+        <label><i class="fas fa-file-pdf"></i> Upload Resume PDF</label>
+        <div class="upload-area" id="uploadArea" onclick="document.getElementById('pdfInput').click()" ondragover="event.preventDefault()" ondrop="handleDrop(event)">
+          <i class="fas fa-cloud-upload-alt upload-icon"></i>
+          <p id="uploadLabel">Click to upload PDF <span>or drag &amp; drop</span></p>
+          <small>PDF files only · Max 5MB</small>
         </div>
-        <small>Free API key from aistudio.google.com - your key stays in your browser only</small>
+        <input type="file" id="pdfInput" accept=".pdf" style="display:none" onchange="handlePDFUpload(event)"/>
       </div>
-      <button class="btn-analyse" id="analyseBtn" onclick="analyseResume()">Analyse Resume</button>
+
+      <div class="divider"><span>or paste text below</span></div>
+
+      <div class="input-group">
+        <label><i class="fas fa-align-left"></i> Resume Text *</label>
+        <textarea id="resumeText" rows="10" placeholder="Paste your full resume text here..."></textarea>
+      </div>
+
+      <div id="jdSection" style="display:none" class="input-group mode-section">
+        <label><i class="fas fa-briefcase"></i> Job Description *</label>
+        <textarea id="jdText" rows="8" placeholder="Paste the full job description here..."></textarea>
+      </div>
+
+      <div id="tailorSection" style="display:none" class="input-group mode-section">
+        <label><i class="fas fa-bullseye"></i> Target Job Role *</label>
+        <input type="text" id="targetRole" placeholder="e.g. Project Manager, Data Scientist, Marketing Lead"/>
+        <small class="hint">AI will rewrite your resume bullets, summary &amp; skills to match this role</small>
+      </div>
+
+      <div id="analyseSection" class="input-group">
+        <label><i class="fas fa-user-tie"></i> Current Job Role <span class="optional">(Optional)</span></label>
+        <input type="text" id="jobRole" placeholder="e.g. Software Engineer, Business Analyst"/>
+      </div>
+
+      <div id="analyseError" class="auth-error" style="margin-bottom:14px"></div>
+
+      <button class="btn-analyse" id="analyseBtn" onclick="handleSubmit()">
+        <i class="fas fa-bolt"></i> <span id="btnText">Analyse Resume</span>
+      </button>
     </div>
   </section>
-  <section class="results-section" id="results" style="display:none">
-    <div class="results-card">
-      <h2>Your Resume Analysis Report</h2>
-      <div class="score-row">
-        <div class="score-box" id="atsScoreBox"><div class="score-number" id="atsScore">--</div><div class="score-label">ATS Score</div></div>
-        <div class="score-box"><div class="score-number" id="overallScore">--</div><div class="score-label">Overall Rating</div></div>
-        <div class="score-box"><div class="score-number" id="skillsCount">--</div><div class="score-label">Skills Found</div></div>
-      </div>
-      <div class="report-grid">
-        <div class="report-block strengths"><h3>Strengths</h3><div id="strengthsList"></div></div>
-        <div class="report-block weaknesses"><h3>Weaknesses</h3><div id="weaknessesList"></div></div>
-        <div class="report-block skills"><h3>Skills Detected</h3><div id="skillsList"></div></div>
-        <div class="report-block suggestions"><h3>Suggestions to Improve</h3><div id="suggestionsList"></div></div>
-      </div>
-      <div class="report-block summary-block"><h3>Overall Summary</h3><p id="summaryText"></p></div>
-      <button class="btn-again" onclick="analyseAgain()">Analyse Another Resume</button>
+
+  <div id="loading" style="display:none" class="loading-overlay">
+    <div class="loading-box">
+      <div class="spinner"></div>
+      <p id="loadingText">Analysing your resume with AI...</p>
     </div>
-  </section>
-  <div class="loading-overlay" id="loading" style="display:none">
-    <div class="loader-box"><div class="spinner"></div><p>AI is analysing your resume...</p><small>This may take 10-15 seconds</small></div>
   </div>
+
+  <section id="results" style="display:none" class="results-section">
+    <div class="results-card">
+      <div class="results-header">
+        <h2 id="resultsTitle">Analysis Results</h2>
+        <button class="btn-new" onclick="resetForm()"><i class="fas fa-redo"></i> New Analysis</button>
+      </div>
+
+      <div id="scoresRow" class="scores-row">
+        <div class="score-card">
+          <div class="score-circle" id="atsScoreCircle">
+            <span id="atsScore">--</span>
+          </div>
+          <p>ATS Score</p>
+        </div>
+        <div class="score-card" id="matchScoreCard" style="display:none">
+          <div class="score-circle match-circle">
+            <span id="matchScore">--</span>
+          </div>
+          <p>JD Match</p>
+        </div>
+        <div class="score-card">
+          <div class="score-circle rating-circle">
+            <span id="overallRating">--</span><small>/10</small>
+          </div>
+          <p>Overall Rating</p>
+        </div>
+      </div>
+
+      <div class="result-block">
+        <h3><i class="fas fa-comment-dots"></i> Summary</h3>
+        <p id="summaryText" class="summary-text"></p>
+      </div>
+
+      <div class="result-block">
+        <h3><i class="fas fa-tools"></i> Skills Detected</h3>
+        <div id="skillsList" class="skills-list"></div>
+      </div>
+
+      <div class="two-col">
+        <div class="result-block">
+          <h3><i class="fas fa-thumbs-up"></i> Strengths</h3>
+          <ul id="strengthsList" class="check-list"></ul>
+        </div>
+        <div class="result-block">
+          <h3><i class="fas fa-exclamation-triangle"></i> Weaknesses</h3>
+          <ul id="weaknessesList" class="cross-list"></ul>
+        </div>
+      </div>
+
+      <div id="missingKeywordsBlock" class="result-block" style="display:none">
+        <h3><i class="fas fa-search-minus"></i> Missing Keywords from JD</h3>
+        <div id="missingKeywordsList" class="skills-list missing"></div>
+      </div>
+
+      <div class="result-block">
+        <h3><i class="fas fa-lightbulb"></i> Suggestions to Improve</h3>
+        <ul id="suggestionsList" class="suggest-list"></ul>
+      </div>
+
+      <div id="tailoredResumeBlock" class="result-block" style="display:none">
+        <h3><i class="fas fa-magic"></i> Your Tailored Resume</h3>
+        <p class="tailor-note"><i class="fas fa-info-circle"></i> Your resume has been rewritten for the target role. Review, copy and use it!</p>
+        <div id="tailoredResumeText" class="tailored-box"></div>
+        <button class="btn-copy" onclick="copyTailored()"><i class="fas fa-copy"></i> Copy Tailored Resume</button>
+      </div>
+    </div>
+  </section>
+
   <footer class="footer">
-    <p>ResumeAI - Built with Google Gemini AI</p>
-    <p><small>Your resume data is never stored. Processed in real-time.</small></p>
+    <p><i class="fas fa-robot"></i> ResumeAI &mdash; Powered by Google Gemini AI &bull; <i class="fas fa-shield-alt"></i> Your data is never stored</p>
   </footer>
-  <script src="script.js"></script>
+</div>
+
+<script src="script.js"></script>
 </body>
 </html>
