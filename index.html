@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>ResumeAI - Smart Resume Analyser</title>
+  <link rel="stylesheet" href="style.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet"/>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"/>
+</head>
+<body>
+  <nav class="navbar">
+    <div class="nav-brand"><i class="fas fa-robot"></i> ResumeAI</div>
+    <div class="nav-links">
+      <a href="#how">How it works</a>
+      <a href="#upload" class="btn-nav">Analyse Now</a>
+    </div>
+  </nav>
+  <section class="hero">
+    <div class="hero-content">
+      <span class="badge">AI Powered</span>
+      <h1>Analyse Your Resume - Get Hired Faster</h1>
+      <p>Upload your resume and get instant AI-powered feedback on skills, ATS score, strengths, and improvement tips.</p>
+      <a href="#upload" class="btn-primary">Analyse My Resume</a>
+    </div>
+  </section>
+  <section class="how-it-works" id="how">
+    <h2>How It Works</h2>
+    <p class="sub">Three simple steps to a better resume</p>
+    <div class="steps">
+      <div class="step"><div class="step-icon">1</div><h3>Paste Resume</h3><p>Paste your resume text directly into the analyser.</p></div>
+      <div class="step"><div class="step-icon">2</div><h3>AI Analysis</h3><p>Our AI analyses your resume for ATS compatibility, skills, and gaps.</p></div>
+      <div class="step"><div class="step-icon">3</div><h3>Get Report</h3><p>Receive a detailed report with actionable suggestions instantly.</p></div>
+    </div>
+  </section>
+  <section class="upload-section" id="upload">
+    <div class="upload-card">
+      <h2>Analyse Your Resume</h2>
+      <p>Paste your resume text below and get instant AI feedback</p>
+      <div class="input-group">
+        <label>Job Role (Optional)</label>
+        <input type="text" id="jobRole" placeholder="e.g. Software Engineer, Data Analyst"/>
+      </div>
+      <div class="input-group">
+        <label>Paste Your Resume Text *</label>
+        <textarea id="resumeText" rows="12" placeholder="Paste your full resume text here..."></textarea>
+      </div>
+      <div class="api-group">
+        <label>Your Gemini API Key *</label>
+        <div class="api-input-wrap">
+          <input type="password" id="apiKey" placeholder="Paste your Google Gemini API key here"/>
+          <button onclick="toggleKey()" id="toggleBtn">Show</button>
+        </div>
+        <small>Free API key from aistudio.google.com - your key stays in your browser only</small>
+      </div>
+      <button class="btn-analyse" id="analyseBtn" onclick="analyseResume()">Analyse Resume</button>
+    </div>
+  </section>
+  <section class="results-section" id="results" style="display:none">
+    <div class="results-card">
+      <h2>Your Resume Analysis Report</h2>
+      <div class="score-row">
+        <div class="score-box" id="atsScoreBox"><div class="score-number" id="atsScore">--</div><div class="score-label">ATS Score</div></div>
+        <div class="score-box"><div class="score-number" id="overallScore">--</div><div class="score-label">Overall Rating</div></div>
+        <div class="score-box"><div class="score-number" id="skillsCount">--</div><div class="score-label">Skills Found</div></div>
+      </div>
+      <div class="report-grid">
+        <div class="report-block strengths"><h3>Strengths</h3><div id="strengthsList"></div></div>
+        <div class="report-block weaknesses"><h3>Weaknesses</h3><div id="weaknessesList"></div></div>
+        <div class="report-block skills"><h3>Skills Detected</h3><div id="skillsList"></div></div>
+        <div class="report-block suggestions"><h3>Suggestions to Improve</h3><div id="suggestionsList"></div></div>
+      </div>
+      <div class="report-block summary-block"><h3>Overall Summary</h3><p id="summaryText"></p></div>
+      <button class="btn-again" onclick="analyseAgain()">Analyse Another Resume</button>
+    </div>
+  </section>
+  <div class="loading-overlay" id="loading" style="display:none">
+    <div class="loader-box"><div class="spinner"></div><p>AI is analysing your resume...</p><small>This may take 10-15 seconds</small></div>
+  </div>
+  <footer class="footer">
+    <p>ResumeAI - Built with Google Gemini AI</p>
+    <p><small>Your resume data is never stored. Processed in real-time.</small></p>
+  </footer>
+  <script src="script.js"></script>
+</body>
+</html>
