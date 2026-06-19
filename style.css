@@ -238,3 +238,25 @@ textarea,input{font-family:inherit}
   .hist-summary{display:none}
   .how-grid{grid-template-columns:1fr}
 }
+
+
+/* ── API KEY MODAL ───────────────── */
+.modal-overlay{position:fixed;inset:0;background:rgba(15,23,42,.65);display:flex;align-items:center;justify-content:center;z-index:1000;backdrop-filter:blur(6px);padding:20px}
+.modal-card{background:#fff;border-radius:28px;padding:40px;max-width:480px;width:100%;box-shadow:0 32px 80px rgba(0,0,0,.22);animation:fadeUp .3s ease}
+.modal-icon{width:64px;height:64px;background:linear-gradient(135deg,#4f46e5,#7c3aed);border-radius:18px;display:flex;align-items:center;justify-content:center;font-size:26px;color:#fff;margin:0 auto 20px}
+.modal-card h2{font-size:22px;font-weight:800;color:#0f172a;text-align:center;margin-bottom:8px}
+.modal-desc{color:#64748b;font-size:14px;text-align:center;line-height:1.7;margin-bottom:24px}
+.modal-steps{background:#f8f7ff;border-radius:14px;padding:16px 20px;margin-bottom:24px;display:flex;flex-direction:column;gap:10px}
+.modal-step{font-size:13px;color:#374151;display:flex;align-items:flex-start;gap:10px;line-height:1.6}
+.modal-step a{color:#4f46e5;font-weight:600}
+.ms-num{background:#4f46e5;color:#fff;border-radius:6px;width:20px;height:20px;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;flex-shrink:0;margin-top:1px}
+.modal-input-wrap label{font-weight:600;font-size:13px;color:#374151}
+.modal-note{color:#94a3b8;font-size:12px;margin-top:8px;display:flex;align-items:center;gap:5px}
+.modal-note i{color:#22c55e}
+
+/* ── TOAST NOTIFICATION ────────── */
+.toast{position:fixed;bottom:28px;right:28px;background:#0f172a;color:#fff;padding:14px 22px;border-radius:14px;font-size:14px;font-weight:600;display:flex;align-items:center;gap:10px;box-shadow:0 8px 28px rgba(0,0,0,.25);z-index:9999;transform:translateY(80px);opacity:0;transition:all .35s cubic-bezier(.34,1.56,.64,1)}
+.toast.show{transform:translateY(0);opacity:1}
+.toast-success i{color:#22c55e}
+.toast-info i{color:#60a5fa}
+.toast-error i{color:#ef4444}
